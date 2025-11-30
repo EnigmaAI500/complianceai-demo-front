@@ -240,29 +240,7 @@ export default function ImplementationPage() {
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-3xl p-8 md:p-12 border border-amber-500/20 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            {t.implementation.cta.title}
-          </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto mb-8">
-            {t.implementation.cta.subtitle}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="#"
-              className="px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-300"
-            >
-              {t.implementation.cta.schedule}
-            </a>
-            <a
-              href="/#demo"
-              className="px-8 py-4 bg-slate-800 text-white font-semibold rounded-full border border-slate-700 hover:border-amber-500/50 transition-all duration-300"
-            >
-              {t.implementation.cta.tryDemo}
-            </a>
-          </div>
-        </div>
+        
       </Container>
     </main>
   );
