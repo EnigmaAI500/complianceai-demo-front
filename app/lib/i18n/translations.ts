@@ -1,4 +1,128 @@
-export const translations = {
+// Define the translation structure type
+export interface TranslationKeys {
+  nav: {
+    home: string;
+    problem: string;
+    why: string;
+    team: string;
+    roadmap: string;
+    implementation: string;
+    tryDemo: string;
+  };
+  hero: {
+    badge: string;
+    title1: string;
+    title2: string;
+    title3: string;
+    subtitle: string;
+    tryDemo: string;
+    viewGithub: string;
+    learnMore: string;
+    stats: {
+      timeSaved: string;
+      accuracy: string;
+      monitoring: string;
+    };
+  };
+  demo: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    upload: {
+      title: string;
+      dropzone: string;
+      supported: string;
+      sampleLoaded: string;
+      ready: string;
+    };
+    results: {
+      title: string;
+      runAnalysis: string;
+      processing: string;
+      aiAnalyzing: string;
+      overallScore: string;
+      viewReport: string;
+    };
+    button: {
+      analyze: string;
+      analyzing: string;
+      reset: string;
+    };
+  };
+  problem: {
+    title: string;
+    subtitle: string;
+    costTitle: string;
+    costDesc: string;
+    cards?: {
+      manual?: { title: string; desc: string; statLabel: string };
+      costs?: { title: string; desc: string; statLabel: string };
+      errors?: { title: string; desc: string; statLabel: string };
+      regulations?: { title: string; desc: string; statLabel: string };
+      silos?: { title: string; desc: string; statLabel: string };
+      audit?: { title: string; desc: string; statLabel: string };
+    };
+    stats?: { fine: string; stock: string; churn: string };
+    statLabels?: { fine: string; stock: string; churn: string; risk: string };
+  };
+  why: {
+    title: string;
+    subtitle: string;
+    comparison: string;
+    comparisonSubtitle: string;
+    seeAction: string;
+    viewImpl: string;
+    features?: {
+      ai?: { title: string; desc: string };
+      realtime?: { title: string; desc: string };
+      security?: { title: string; desc: string };
+      dashboard?: { title: string; desc: string };
+      insights?: { title: string; desc: string };
+      integrations?: { title: string; desc: string };
+    };
+    tableHeaders?: { feature: string; traditional: string };
+    table?: { processing: string; accuracy: string; coverage: string; audit: string; cost: string };
+  };
+  team: {
+    title: string;
+    subtitle: string;
+  };
+  roadmap: {
+    title: string;
+    subtitle: string;
+    completed: string;
+    inProgress: string;
+    upcoming: string;
+    feedback: string;
+    shareFeedback: string;
+  };
+  implementation: {
+    title: string;
+    subtitle: string;
+    timeline: string;
+    timelineDesc: string;
+    processTitle: string;
+    processSubtitle: string;
+    techSpecs: string;
+    techSpecsSubtitle: string;
+    cta: {
+      title: string;
+      subtitle: string;
+      schedule: string;
+      tryDemo: string;
+    };
+  };
+  footer: {
+    tagline: string;
+    quickLinks: string;
+    contact: string;
+    rights: string;
+  };
+}
+
+export type Language = "en" | "ru" | "uz";
+
+export const translations: Record<Language, TranslationKeys> = {
   en: {
     // Navbar
     nav: {
@@ -388,7 +512,4 @@ export const translations = {
       rights: "Barcha huquqlar himoyalangan.",
     },
   },
-} as const;
-
-export type Language = keyof typeof translations;
-export type TranslationKeys = typeof translations.en;
+};
