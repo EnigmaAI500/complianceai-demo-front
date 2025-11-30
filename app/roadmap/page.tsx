@@ -32,8 +32,8 @@ export default function RoadmapPage() {
     {
       phase: "Phase 1",
       title: "Foundation",
-      timeline: "Q1 2024",
-      status: "completed",
+      timeline: "Q1",
+      status: "in-progress",
       items: [
         "Core AI document analysis engine",
         "GDPR & SOC 2 framework support",
@@ -45,8 +45,8 @@ export default function RoadmapPage() {
     {
       phase: "Phase 2",
       title: "Expansion",
-      timeline: "Q2 2024",
-      status: "completed",
+      timeline: "Q2 ",
+      status: "in-progress",
       items: [
         "HIPAA & ISO 27001 frameworks",
         "Real-time monitoring dashboard",
@@ -58,8 +58,8 @@ export default function RoadmapPage() {
     {
       phase: "Phase 3",
       title: "Intelligence",
-      timeline: "Q3 2024",
-      status: "in-progress",
+      timeline: "Q3",
+      status: "upcoming",
       items: [
         "Predictive risk scoring",
         "Natural language query interface",
@@ -71,7 +71,7 @@ export default function RoadmapPage() {
     {
       phase: "Phase 4",
       title: "Enterprise",
-      timeline: "Q4 2024",
+      timeline: "Q4",
       status: "upcoming",
       items: [
         "On-premise deployment option",
@@ -84,7 +84,7 @@ export default function RoadmapPage() {
     {
       phase: "Phase 5",
       title: "Ecosystem",
-      timeline: "2025",
+      timeline: "2026",
       status: "upcoming",
       items: [
         "Marketplace for compliance apps",
@@ -225,7 +225,7 @@ export default function RoadmapPage() {
             {t.roadmap.feedback}
           </p>
           <a
-            href="mailto:roadmap@complianceai.io"
+            href="https://www.linkedin.com/in/aziza-abdurakhmonova-721844192/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-slate-800 text-white font-medium rounded-full border border-slate-700 hover:border-blue-500/50 transition-all"
           >
             {t.roadmap.shareFeedback}
