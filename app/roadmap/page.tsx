@@ -1,96 +1,101 @@
+"use client";
+
 import Container from "../components/ui/Container";
 import PageHeader from "../components/ui/PageHeader";
-
-const roadmapPhases = [
-  {
-    phase: "Phase 1",
-    title: "Foundation",
-    timeline: "Q1 2024",
-    status: "completed",
-    items: [
-      "Core AI document analysis engine",
-      "GDPR & SOC 2 framework support",
-      "Basic dashboard & reporting",
-      "API for document upload",
-      "Slack integration",
-    ],
-  },
-  {
-    phase: "Phase 2",
-    title: "Expansion",
-    timeline: "Q2 2024",
-    status: "completed",
-    items: [
-      "HIPAA & ISO 27001 frameworks",
-      "Real-time monitoring dashboard",
-      "Automated remediation suggestions",
-      "Jira & ServiceNow integrations",
-      "Custom policy builder",
-    ],
-  },
-  {
-    phase: "Phase 3",
-    title: "Intelligence",
-    timeline: "Q3 2024",
-    status: "in-progress",
-    items: [
-      "Predictive risk scoring",
-      "Natural language query interface",
-      "Multi-language document support",
-      "Advanced analytics & trends",
-      "Audit trail & evidence collection",
-    ],
-  },
-  {
-    phase: "Phase 4",
-    title: "Enterprise",
-    timeline: "Q4 2024",
-    status: "upcoming",
-    items: [
-      "On-premise deployment option",
-      "SSO & advanced RBAC",
-      "Custom AI model training",
-      "Industry-specific compliance packs",
-      "White-label solution",
-    ],
-  },
-  {
-    phase: "Phase 5",
-    title: "Ecosystem",
-    timeline: "2025",
-    status: "upcoming",
-    items: [
-      "Marketplace for compliance apps",
-      "Third-party AI model integrations",
-      "Global regulatory database",
-      "Automated regulatory change tracking",
-      "Compliance workflow automation",
-    ],
-  },
-];
-
-const statusConfig = {
-  completed: {
-    color: "bg-emerald-500",
-    textColor: "text-emerald-400",
-    label: "Completed",
-    bgGlow: "from-emerald-500/20",
-  },
-  "in-progress": {
-    color: "bg-cyan-500",
-    textColor: "text-cyan-400",
-    label: "In Progress",
-    bgGlow: "from-cyan-500/20",
-  },
-  upcoming: {
-    color: "bg-slate-600",
-    textColor: "text-slate-400",
-    label: "Upcoming",
-    bgGlow: "from-slate-500/20",
-  },
-};
+import { useLanguage } from "../lib/i18n/LanguageContext";
 
 export default function RoadmapPage() {
+  const { t } = useLanguage();
+
+  const statusConfig = {
+    completed: {
+      color: "bg-emerald-500",
+      textColor: "text-emerald-400",
+      label: t.roadmap.completed,
+      bgGlow: "from-emerald-500/20",
+    },
+    "in-progress": {
+      color: "bg-cyan-500",
+      textColor: "text-cyan-400",
+      label: t.roadmap.inProgress,
+      bgGlow: "from-cyan-500/20",
+    },
+    upcoming: {
+      color: "bg-slate-600",
+      textColor: "text-slate-400",
+      label: t.roadmap.upcoming,
+      bgGlow: "from-slate-500/20",
+    },
+  };
+
+  const roadmapPhases = [
+    {
+      phase: "Phase 1",
+      title: "Foundation",
+      timeline: "Q1 2024",
+      status: "completed",
+      items: [
+        "Core AI document analysis engine",
+        "GDPR & SOC 2 framework support",
+        "Basic dashboard & reporting",
+        "API for document upload",
+        "Slack integration",
+      ],
+    },
+    {
+      phase: "Phase 2",
+      title: "Expansion",
+      timeline: "Q2 2024",
+      status: "completed",
+      items: [
+        "HIPAA & ISO 27001 frameworks",
+        "Real-time monitoring dashboard",
+        "Automated remediation suggestions",
+        "Jira & ServiceNow integrations",
+        "Custom policy builder",
+      ],
+    },
+    {
+      phase: "Phase 3",
+      title: "Intelligence",
+      timeline: "Q3 2024",
+      status: "in-progress",
+      items: [
+        "Predictive risk scoring",
+        "Natural language query interface",
+        "Multi-language document support",
+        "Advanced analytics & trends",
+        "Audit trail & evidence collection",
+      ],
+    },
+    {
+      phase: "Phase 4",
+      title: "Enterprise",
+      timeline: "Q4 2024",
+      status: "upcoming",
+      items: [
+        "On-premise deployment option",
+        "SSO & advanced RBAC",
+        "Custom AI model training",
+        "Industry-specific compliance packs",
+        "White-label solution",
+      ],
+    },
+    {
+      phase: "Phase 5",
+      title: "Ecosystem",
+      timeline: "2025",
+      status: "upcoming",
+      items: [
+        "Marketplace for compliance apps",
+        "Third-party AI model integrations",
+        "Global regulatory database",
+        "Automated regulatory change tracking",
+        "Compliance workflow automation",
+      ],
+    },
+  ];
+
   return (
     <main className="min-h-screen pt-32 pb-20">
       {/* Background */}
@@ -100,8 +105,8 @@ export default function RoadmapPage() {
 
       <Container>
         <PageHeader
-          title="Product Roadmap"
-          subtitle="Our vision for building the future of compliance. See what we've accomplished and where we're headed."
+          title={t.roadmap.title}
+          subtitle={t.roadmap.subtitle}
           gradient="from-blue-400 to-indigo-500"
         />
 
@@ -217,13 +222,13 @@ export default function RoadmapPage() {
         {/* CTA */}
         <div className="text-center mt-20">
           <p className="text-slate-400 mb-6">
-            Want to influence our roadmap? We&apos;d love to hear from you.
+            {t.roadmap.feedback}
           </p>
           <a
             href="mailto:roadmap@complianceai.io"
             className="inline-flex items-center gap-2 px-6 py-3 bg-slate-800 text-white font-medium rounded-full border border-slate-700 hover:border-blue-500/50 transition-all"
           >
-            Share Feedback
+            {t.roadmap.shareFeedback}
             <svg
               className="w-4 h-4"
               fill="none"
@@ -243,4 +248,3 @@ export default function RoadmapPage() {
     </main>
   );
 }
-

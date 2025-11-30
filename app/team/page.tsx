@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Container from "../components/ui/Container";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
+import { useLanguage } from "../lib/i18n/LanguageContext";
 
 const teamMembers = [
   {
@@ -12,7 +15,7 @@ const teamMembers = [
     initials: "AA",
     color: "from-violet-500 to-purple-600",
     linkedin: "https://www.linkedin.com/in/aziza-abdurakhmonova-721844192/",
-    github: "https://github.com/EnigmaAI500", // Add GitHub username
+    github: "https://github.com/EnigmaAI500",
   },
   {
     name: "Timurxon",
@@ -22,7 +25,7 @@ const teamMembers = [
     initials: "T",
     color: "from-cyan-500 to-blue-600",
     linkedin: "https://www.linkedin.com/in/temurxon-shodiyev/",
-    github: "", // Add GitHub URL if available
+    github: "",
   },
   {
     name: "Firdavs Muzaffarov",
@@ -32,7 +35,7 @@ const teamMembers = [
     initials: "FM",
     color: "from-pink-500 to-rose-600",
     linkedin: "https://www.linkedin.com/in/firdavs-muzaffarov/",
-    github: "", // Add GitHub URL if available
+    github: "",
   },
   {
     name: "Abdujabbor Imomkulov",
@@ -42,7 +45,7 @@ const teamMembers = [
     initials: "AI",
     color: "from-amber-500 to-orange-600",
     linkedin: "https://www.linkedin.com/in/abdujabbor-imomkulov-1a4493347/",
-    github: "", // Add GitHub URL if available
+    github: "",
   },
   {
     name: "Muhammadamin Akbarov",
@@ -52,19 +55,13 @@ const teamMembers = [
     initials: "MA",
     color: "from-emerald-500 to-teal-600",
     linkedin: "https://www.linkedin.com/in/muhammadamin-akbarov-27207b297/",
-    github: "", // Add GitHub URL if available
+    github: "",
   },
 ];
 
-
-const investors = [
-  "Sequoia Capital",
-  "Andreessen Horowitz",
-  "Accel Partners",
-  "Y Combinator",
-];
-
 export default function TeamPage() {
+  const { t } = useLanguage();
+
   return (
     <main className="min-h-screen pt-32 pb-20">
       {/* Background */}
@@ -74,8 +71,8 @@ export default function TeamPage() {
 
       <Container>
         <PageHeader
-          title="Meet the Team"
-          subtitle="World-class experts in compliance, AI, and enterprise software, united by a mission to transform regulatory compliance."
+          title={t.team.title}
+          subtitle={t.team.subtitle}
           gradient="from-violet-400 to-pink-500"
         />
 
@@ -139,13 +136,7 @@ export default function TeamPage() {
             </Card>
           ))}
         </div>
-
-        {/* Investors Section */}
-        <div className="text-center">
-          
-        </div>
       </Container>
     </main>
   );
 }
-

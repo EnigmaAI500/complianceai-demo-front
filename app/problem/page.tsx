@@ -1,59 +1,58 @@
+"use client";
+
 import Container from "../components/ui/Container";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
-
-const problems = [
-  {
-    icon: "⏱️",
-    title: "Time-Consuming Manual Processes",
-    description:
-      "Compliance teams spend 60% of their time on manual document review, data entry, and cross-referencing regulations—tasks that could be automated.",
-    stat: "60%",
-    statLabel: "time wasted on manual work",
-  },
-  {
-    icon: "💸",
-    title: "Skyrocketing Compliance Costs",
-    description:
-      "The average enterprise spends $5.47 million annually on compliance, with costs increasing 45% over the past 5 years due to regulatory complexity.",
-    stat: "$5.47M",
-    statLabel: "average annual spend",
-  },
-  {
-    icon: "⚠️",
-    title: "Human Error & Risk Exposure",
-    description:
-      "Manual compliance processes have a 4% error rate, leading to regulatory fines, reputational damage, and potential legal consequences.",
-    stat: "4%",
-    statLabel: "average error rate",
-  },
-  {
-    icon: "🔄",
-    title: "Constantly Changing Regulations",
-    description:
-      "Regulatory bodies publish an average of 200+ updates daily. Keeping up manually is impossible without dedicated teams monitoring 24/7.",
-    stat: "200+",
-    statLabel: "daily regulatory updates",
-  },
-  {
-    icon: "📊",
-    title: "Fragmented Data & Silos",
-    description:
-      "Compliance data is scattered across spreadsheets, emails, and legacy systems, making it nearly impossible to get a unified view of compliance status.",
-    stat: "73%",
-    statLabel: "companies struggle with data silos",
-  },
-  {
-    icon: "🎯",
-    title: "Audit Preparation Nightmare",
-    description:
-      "Organizations spend an average of 6 weeks preparing for audits, pulling documents from multiple sources and creating reports manually.",
-    stat: "6 weeks",
-    statLabel: "average audit prep time",
-  },
-];
+import { useLanguage } from "../lib/i18n/LanguageContext";
 
 export default function ProblemPage() {
+  const { t } = useLanguage();
+
+  const problems = [
+    {
+      icon: "⏱️",
+      title: t.problem.cards?.manual?.title || "Time-Consuming Manual Processes",
+      description: t.problem.cards?.manual?.desc || "Compliance teams spend 60% of their time on manual document review, data entry, and cross-referencing regulations—tasks that could be automated.",
+      stat: "60%",
+      statLabel: t.problem.cards?.manual?.statLabel || "time wasted on manual work",
+    },
+    {
+      icon: "💸",
+      title: t.problem.cards?.costs?.title || "Skyrocketing Compliance Costs",
+      description: t.problem.cards?.costs?.desc || "The average enterprise spends $5.47 million annually on compliance, with costs increasing 45% over the past 5 years due to regulatory complexity.",
+      stat: "$5.47M",
+      statLabel: t.problem.cards?.costs?.statLabel || "average annual spend",
+    },
+    {
+      icon: "⚠️",
+      title: t.problem.cards?.errors?.title || "Human Error & Risk Exposure",
+      description: t.problem.cards?.errors?.desc || "Manual compliance processes have a 4% error rate, leading to regulatory fines, reputational damage, and potential legal consequences.",
+      stat: "4%",
+      statLabel: t.problem.cards?.errors?.statLabel || "average error rate",
+    },
+    {
+      icon: "🔄",
+      title: t.problem.cards?.regulations?.title || "Constantly Changing Regulations",
+      description: t.problem.cards?.regulations?.desc || "Regulatory bodies publish an average of 200+ updates daily. Keeping up manually is impossible without dedicated teams monitoring 24/7.",
+      stat: "200+",
+      statLabel: t.problem.cards?.regulations?.statLabel || "daily regulatory updates",
+    },
+    {
+      icon: "📊",
+      title: t.problem.cards?.silos?.title || "Fragmented Data & Silos",
+      description: t.problem.cards?.silos?.desc || "Compliance data is scattered across spreadsheets, emails, and legacy systems, making it nearly impossible to get a unified view of compliance status.",
+      stat: "73%",
+      statLabel: t.problem.cards?.silos?.statLabel || "companies struggle with data silos",
+    },
+    {
+      icon: "🎯",
+      title: t.problem.cards?.audit?.title || "Audit Preparation Nightmare",
+      description: t.problem.cards?.audit?.desc || "Organizations spend an average of 6 weeks preparing for audits, pulling documents from multiple sources and creating reports manually.",
+      stat: "6 weeks",
+      statLabel: t.problem.cards?.audit?.statLabel || "average audit prep time",
+    },
+  ];
+
   return (
     <main className="min-h-screen pt-32 pb-20">
       {/* Background */}
@@ -63,8 +62,8 @@ export default function ProblemPage() {
 
       <Container>
         <PageHeader
-          title="The Problem"
-          subtitle="Traditional compliance is broken. Organizations are drowning in regulatory complexity, wasting resources on manual processes that don't scale."
+          title={t.problem.title}
+          subtitle={t.problem.subtitle}
           gradient="from-red-400 to-orange-500"
         />
 
@@ -95,19 +94,16 @@ export default function ProblemPage() {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <h2 className="text-3xl font-bold text-white mb-4">
-                The Cost of Inaction
+                {t.problem.costTitle}
               </h2>
               <p className="text-slate-400 leading-relaxed mb-6">
-                Non-compliance isn&apos;t just expensive—it&apos;s existential. Beyond the
-                immediate financial penalties, organizations face reputational
-                damage, lost customer trust, and in severe cases, operational
-                shutdown.
+                {t.problem.costDesc}
               </p>
               <ul className="space-y-3">
                 {[
-                  "Average regulatory fine: $14.8 million",
-                  "Stock price drop after breach: 7.5%",
-                  "Customer churn post-incident: 31%",
+                  t.problem.stats?.fine || "Average regulatory fine: $14.8 million",
+                  t.problem.stats?.stock || "Stock price drop after breach: 7.5%",
+                  t.problem.stats?.churn || "Customer churn post-incident: 31%",
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3 text-slate-300">
                     <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
@@ -118,10 +114,10 @@ export default function ProblemPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               {[
-                { value: "$14.8M", label: "Avg Fine" },
-                { value: "7.5%", label: "Stock Drop" },
-                { value: "31%", label: "Churn Rate" },
-                { value: "2.3x", label: "Risk Multiplier" },
+                { value: "$14.8M", label: t.problem.statLabels?.fine || "Avg Fine" },
+                { value: "7.5%", label: t.problem.statLabels?.stock || "Stock Drop" },
+                { value: "31%", label: t.problem.statLabels?.churn || "Churn Rate" },
+                { value: "2.3x", label: t.problem.statLabels?.risk || "Risk Multiplier" },
               ].map((stat) => (
                 <div
                   key={stat.label}
@@ -140,4 +136,3 @@ export default function ProblemPage() {
     </main>
   );
 }
-

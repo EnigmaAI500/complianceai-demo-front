@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Rubik, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import { LanguageProvider } from "./lib/i18n/LanguageContext";
 
-const spaceGrotesk = Space_Grotesk({
+const rubik = Rubik({
   variable: "--font-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
   display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
   display: "swap",
 });
 
@@ -30,11 +31,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased bg-slate-950 text-white`}
+        className={`${rubik.variable} ${jetbrainsMono.variable} font-sans antialiased bg-slate-950 text-white`}
       >
-        <Navbar />
-        {children}
-        <Footer />
+        <LanguageProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

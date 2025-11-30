@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Card from "../ui/Card";
+import { useLanguage } from "../../lib/i18n/LanguageContext";
 
 const sampleDocuments = [
   { name: "GDPR_Policy_2024.pdf", type: "Policy Document" },
@@ -19,6 +20,7 @@ const analysisResults = [
 export default function Demo() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const { t } = useLanguage();
 
   const handleAnalyze = () => {
     setIsAnalyzing(true);
@@ -42,13 +44,13 @@ export default function Demo() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-medium mb-4">
-            Interactive Demo
+            {t.demo.badge}
           </span>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            See It In Action
+            {t.demo.title}
           </h2>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            Upload your compliance documents and watch our AI analyze them in real-time
+            {t.demo.subtitle}
           </p>
         </div>
 
@@ -60,7 +62,7 @@ export default function Demo() {
               <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              Document Upload
+              {t.demo.upload.title}
             </h3>
 
             {/* Drop Zone */}
@@ -69,16 +71,16 @@ export default function Demo() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <p className="text-slate-400 text-sm">
-                Drag & drop files here or click to browse
+                {t.demo.upload.dropzone}
               </p>
               <p className="text-slate-600 text-xs mt-2">
-                Supports PDF, DOCX, XLSX up to 50MB
+                {t.demo.upload.supported}
               </p>
             </div>
 
             {/* Sample Documents */}
             <div className="space-y-3">
-              <p className="text-sm text-slate-500 mb-3">Sample documents loaded:</p>
+              <p className="text-sm text-slate-500 mb-3">{t.demo.upload.sampleLoaded}</p>
               {sampleDocuments.map((doc) => (
                 <div
                   key={doc.name}
@@ -95,7 +97,7 @@ export default function Demo() {
                       <p className="text-slate-500 text-xs">{doc.type}</p>
                     </div>
                   </div>
-                  <span className="text-emerald-400 text-xs">Ready</span>
+                  <span className="text-emerald-400 text-xs">{t.demo.upload.ready}</span>
                 </div>
               ))}
             </div>
@@ -118,13 +120,13 @@ export default function Demo() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Analyzing...
+                  {t.demo.button.analyzing}
                 </>
               ) : showResults ? (
-                "Reset Demo"
+                t.demo.button.reset
               ) : (
                 <>
-                  Run AI Analysis
+                  {t.demo.button.analyze}
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
@@ -139,7 +141,7 @@ export default function Demo() {
               <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
-              Analysis Results
+              {t.demo.results.title}
             </h3>
 
             {!showResults && !isAnalyzing && (
@@ -150,7 +152,7 @@ export default function Demo() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
-                  <p className="text-slate-500">Run analysis to see results</p>
+                  <p className="text-slate-500">{t.demo.results.runAnalysis}</p>
                 </div>
               </div>
             )}
@@ -164,8 +166,8 @@ export default function Demo() {
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
                   </div>
-                  <p className="text-cyan-400 font-medium">Processing documents...</p>
-                  <p className="text-slate-500 text-sm mt-2">AI is analyzing compliance requirements</p>
+                  <p className="text-cyan-400 font-medium">{t.demo.results.processing}</p>
+                  <p className="text-slate-500 text-sm mt-2">{t.demo.results.aiAnalyzing}</p>
                 </div>
               </div>
             )}
@@ -177,7 +179,7 @@ export default function Demo() {
                   <div className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent mb-2">
                     87%
                   </div>
-                  <p className="text-slate-400 text-sm">Overall Compliance Score</p>
+                  <p className="text-slate-400 text-sm">{t.demo.results.overallScore}</p>
                 </div>
 
                 {/* Framework Results */}
@@ -198,7 +200,7 @@ export default function Demo() {
 
                 {/* Action Button */}
                 <button className="w-full mt-4 py-3 rounded-xl bg-slate-800 text-cyan-400 font-medium hover:bg-slate-700 transition-colors flex items-center justify-center gap-2">
-                  View Full Report
+                  {t.demo.results.viewReport}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -211,4 +213,3 @@ export default function Demo() {
     </section>
   );
 }
-

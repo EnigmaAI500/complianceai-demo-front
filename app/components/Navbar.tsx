@@ -2,18 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/problem", label: "Problem" },
-  { href: "/why", label: "Why Us" },
-  { href: "/team", label: "Team" },
-  { href: "/roadmap", label: "Roadmap" },
-  { href: "/implementation", label: "Implementation" },
-];
+import { useLanguage } from "../lib/i18n/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const navItems = [
+    { href: "/", label: t.nav.home },
+    { href: "/problem", label: t.nav.problem },
+    { href: "/why", label: t.nav.why },
+    { href: "/team", label: t.nav.team },
+    { href: "/roadmap", label: t.nav.roadmap },
+    { href: "/implementation", label: t.nav.implementation },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-cyan-500/20">
@@ -30,7 +33,7 @@ export default function Navbar() {
           </Link>
 
           {/* Navigation Tabs */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -52,40 +55,44 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* CTA Button */}
-          <Link
-            href="/#demo"
-            className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 hover:scale-105"
-          >
-            Try Demo
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          {/* Right Section */}
+          <div className="hidden md:flex items-center gap-3">
+            <LanguageSwitcher />
+            <Link
+              href="/#demo"
+              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 hover:scale-105"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </svg>
-          </Link>
+              {t.nav.tryDemo}
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </Link>
+          </div>
 
           {/* Mobile Menu Button */}
-          <MobileMenu />
+          <MobileMenu navItems={navItems} tryDemo={t.nav.tryDemo} />
         </div>
       </div>
     </nav>
   );
 }
 
-function MobileMenu() {
+function MobileMenu({ navItems, tryDemo }: { navItems: { href: string; label: string }[]; tryDemo: string }) {
   const pathname = usePathname();
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden flex items-center gap-2">
+      <LanguageSwitcher />
       <input type="checkbox" id="mobile-menu" className="hidden peer" />
       <label
         htmlFor="mobile-menu"
@@ -117,11 +124,10 @@ function MobileMenu() {
             href="/#demo"
             className="mt-2 flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-full"
           >
-            Try Demo
+            {tryDemo}
           </Link>
         </div>
       </div>
     </div>
   );
 }
-

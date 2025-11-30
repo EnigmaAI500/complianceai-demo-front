@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useLanguage } from "../lib/i18n/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="bg-slate-950 border-t border-cyan-500/10">
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -16,22 +21,26 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-slate-400 text-sm max-w-md">
-              Revolutionizing regulatory compliance with AI-powered solutions.
-              Automate your compliance workflows and reduce risk.
+              {t.footer.tagline}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Quick Links</h4>
+            <h4 className="text-white font-semibold mb-4">{t.footer.quickLinks}</h4>
             <ul className="space-y-2">
-              {["Problem", "Why Us", "Team", "Roadmap"].map((item) => (
-                <li key={item}>
+              {[
+                { label: t.nav.problem, href: "/problem" },
+                { label: t.nav.why, href: "/why" },
+                { label: t.nav.team, href: "/team" },
+                { label: t.nav.roadmap, href: "/roadmap" },
+              ].map((item) => (
+                <li key={item.href}>
                   <Link
-                    href={`/${item.toLowerCase().replace(" ", "")}`}
+                    href={item.href}
                     className="text-slate-400 hover:text-cyan-400 text-sm transition-colors"
                   >
-                    {item}
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -40,7 +49,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Contact</h4>
+            <h4 className="text-white font-semibold mb-4">{t.footer.contact}</h4>
             <ul className="space-y-2 text-slate-400 text-sm">
               <li>aziza.abdurakhmanova.iut@gmail.com</li>
               <li>Tashkent, Uzbekistan</li>
@@ -50,7 +59,7 @@ export default function Footer() {
 
         <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-500 text-sm">
-            © 2024 ComplianceAI. All rights reserved.
+            © 2024 ComplianceAI. {t.footer.rights}
           </p>
           <div className="flex gap-4">
             {/* GitHub */}
@@ -83,4 +92,3 @@ export default function Footer() {
     </footer>
   );
 }
-

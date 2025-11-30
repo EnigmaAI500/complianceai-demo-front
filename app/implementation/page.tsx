@@ -1,14 +1,16 @@
+"use client";
+
 import Container from "../components/ui/Container";
 import PageHeader from "../components/ui/PageHeader";
 import Card from "../components/ui/Card";
+import { useLanguage } from "../lib/i18n/LanguageContext";
 
 const implementationSteps = [
   {
     step: 1,
     title: "Discovery & Planning",
     duration: "1-2 weeks",
-    description:
-      "We analyze your current compliance landscape, identify key pain points, and design a customized implementation roadmap.",
+    description: "We analyze your current compliance landscape, identify key pain points, and design a customized implementation roadmap.",
     deliverables: [
       "Compliance gap analysis report",
       "Custom implementation plan",
@@ -20,8 +22,7 @@ const implementationSteps = [
     step: 2,
     title: "Platform Setup & Integration",
     duration: "2-3 weeks",
-    description:
-      "Our team configures the platform to your specifications, sets up integrations with your existing tools, and imports historical data.",
+    description: "Our team configures the platform to your specifications, sets up integrations with your existing tools, and imports historical data.",
     deliverables: [
       "Configured ComplianceAI instance",
       "Connected integrations (Slack, Jira, etc.)",
@@ -33,8 +34,7 @@ const implementationSteps = [
     step: 3,
     title: "AI Model Training",
     duration: "1-2 weeks",
-    description:
-      "We fine-tune our AI models on your specific documents, policies, and compliance frameworks for maximum accuracy.",
+    description: "We fine-tune our AI models on your specific documents, policies, and compliance frameworks for maximum accuracy.",
     deliverables: [
       "Custom-trained document classifiers",
       "Industry-specific entity extraction",
@@ -46,8 +46,7 @@ const implementationSteps = [
     step: 4,
     title: "Testing & Validation",
     duration: "1-2 weeks",
-    description:
-      "Rigorous testing with your team to ensure everything works perfectly. We validate accuracy and fine-tune based on feedback.",
+    description: "Rigorous testing with your team to ensure everything works perfectly. We validate accuracy and fine-tune based on feedback.",
     deliverables: [
       "UAT test results",
       "Performance benchmarks",
@@ -59,8 +58,7 @@ const implementationSteps = [
     step: 5,
     title: "Training & Go-Live",
     duration: "1 week",
-    description:
-      "Comprehensive training for your team followed by a supported go-live. We're with you every step of the way.",
+    description: "Comprehensive training for your team followed by a supported go-live. We're with you every step of the way.",
     deliverables: [
       "User training sessions (recorded)",
       "Admin training & documentation",
@@ -72,8 +70,7 @@ const implementationSteps = [
     step: 6,
     title: "Ongoing Support & Optimization",
     duration: "Continuous",
-    description:
-      "Dedicated customer success manager, regular check-ins, and continuous optimization to maximize your ROI.",
+    description: "Dedicated customer success manager, regular check-ins, and continuous optimization to maximize your ROI.",
     deliverables: [
       "Dedicated CSM",
       "Quarterly business reviews",
@@ -103,6 +100,8 @@ const techSpecs = [
 ];
 
 export default function ImplementationPage() {
+  const { t } = useLanguage();
+
   return (
     <main className="min-h-screen pt-32 pb-20">
       {/* Background */}
@@ -112,8 +111,8 @@ export default function ImplementationPage() {
 
       <Container>
         <PageHeader
-          title="Implementation"
-          subtitle="A proven, low-friction implementation process designed to get you up and running quickly with minimal disruption to your operations."
+          title={t.implementation.title}
+          subtitle={t.implementation.subtitle}
           gradient="from-amber-400 to-orange-500"
         />
 
@@ -122,10 +121,10 @@ export default function ImplementationPage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h3 className="text-xl font-semibold text-white mb-2">
-                Typical Implementation: 6-10 Weeks
+                {t.implementation.timeline}
               </h3>
               <p className="text-slate-400 text-sm">
-                From kickoff to go-live, we&apos;ll have you operational faster than traditional solutions
+                {t.implementation.timelineDesc}
               </p>
             </div>
             <div className="flex items-center gap-8">
@@ -146,10 +145,10 @@ export default function ImplementationPage() {
         {/* Implementation Steps */}
         <div className="mb-24">
           <h2 className="text-3xl font-bold text-center text-white mb-4">
-            Implementation Process
+            {t.implementation.processTitle}
           </h2>
           <p className="text-slate-400 text-center max-w-2xl mx-auto mb-12">
-            A structured, proven approach that ensures success
+            {t.implementation.processSubtitle}
           </p>
 
           <div className="space-y-6">
@@ -213,10 +212,10 @@ export default function ImplementationPage() {
         {/* Technical Specifications */}
         <div className="mb-20">
           <h2 className="text-3xl font-bold text-center text-white mb-4">
-            Technical Specifications
+            {t.implementation.techSpecs}
           </h2>
           <p className="text-slate-400 text-center max-w-2xl mx-auto mb-12">
-            Enterprise-grade infrastructure built for scale and security
+            {t.implementation.techSpecsSubtitle}
           </p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -244,24 +243,23 @@ export default function ImplementationPage() {
         {/* CTA */}
         <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-3xl p-8 md:p-12 border border-amber-500/20 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Get Started?
+            {t.implementation.cta.title}
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto mb-8">
-            Schedule a call with our implementation team to discuss your specific
-            requirements and get a customized implementation plan.
+            {t.implementation.cta.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="#"
               className="px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-300"
             >
-              Schedule Implementation Call
+              {t.implementation.cta.schedule}
             </a>
             <a
               href="/#demo"
               className="px-8 py-4 bg-slate-800 text-white font-semibold rounded-full border border-slate-700 hover:border-amber-500/50 transition-all duration-300"
             >
-              Try Demo First
+              {t.implementation.cta.tryDemo}
             </a>
           </div>
         </div>
@@ -269,4 +267,3 @@ export default function ImplementationPage() {
     </main>
   );
 }
-
