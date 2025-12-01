@@ -36,7 +36,7 @@ export default function RoadmapPage() {
       status: "in-progress",
       items: [
         "Core AI document analysis engine",
-        "GDPR & SOC 2 framework support",
+        "Local UZ cybersecurity compliance support",
         "Basic dashboard & reporting",
         "API for document upload",
         "Slack integration",
@@ -48,7 +48,7 @@ export default function RoadmapPage() {
       timeline: "Q2 ",
       status: "in-progress",
       items: [
-        "HIPAA & ISO 27001 frameworks",
+        "ISO 27001 frameworks",
         "Real-time monitoring dashboard",
         "Automated remediation suggestions",
         "Jira & ServiceNow integrations",

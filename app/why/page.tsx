@@ -34,7 +34,7 @@ export default function WhyPage() {
         </svg>
       ),
       title: t.why.features?.security?.title || "Enterprise Security",
-      description: t.why.features?.security?.desc || "SOC 2 Type II certified with end-to-end encryption.",
+      description: t.why.features?.security?.desc || "Local UZ cybersecurity compliance and internal security policies check",
     },
     {
       icon: (

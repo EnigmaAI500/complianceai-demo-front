@@ -87,11 +87,11 @@ const techSpecs = [
   },
   {
     category: "Security & Compliance",
-    items: ["SOC 2 Type II", "ISO 27001", "GDPR compliant", "HIPAA ready"],
+    items: ["Local UZ cybersecurity compliance","Internal security policies","SOC 2 Type II", "ISO 27001"],
   },
   {
     category: "Integrations",
-    items: ["REST API", "GraphQL", "Webhooks", "50+ native integrations"],
+    items: ["REST API", "GraphQL", "Webhooks", "native integrations"],
   },
   {
     category: "Data & AI",
