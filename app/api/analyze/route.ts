@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
+import { Readable } from 'stream';
 
 // External API endpoint
 const EXTERNAL_API = 'http://52.172.102.172:8000/risk/batch-excel';
@@ -12,6 +13,7 @@ interface ExcelRow {
   RiskScore?: number;
   RiskFlag?: string;
   RiskReason?: string;
+  LocalBlackListFlag?: string;
   [key: string]: unknown;
 }
 
@@ -70,19 +72,62 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(data);
     }
 
-    // If response is Excel, parse it and convert to JSON
+    // If response is Excel, parse it using ExcelJS and convert to JSON
     if (contentType.includes('spreadsheet') || contentType.includes('excel')) {
-      console.log('Parsing Excel response...');
+      console.log('Parsing Excel response with ExcelJS...');
       
       const arrayBuffer = await response.arrayBuffer();
-      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
       
-      // Get first sheet
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
+      // Create a readable stream from the ArrayBuffer
+      const stream = new Readable();
+      stream.push(Buffer.from(new Uint8Array(arrayBuffer)));
+      stream.push(null);
       
-      // Convert to JSON
-      const rows: ExcelRow[] = XLSX.utils.sheet_to_json(sheet);
+      // Create workbook and load from stream
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.read(stream);
+      
+      // Get first worksheet
+      const worksheet = workbook.worksheets[0];
+      
+      if (!worksheet) {
+        return NextResponse.json(
+          { error: 'No worksheet found in Excel file' },
+          { status: 400 }
+        );
+      }
+
+      // Get headers from first row
+      const headers: string[] = [];
+      const headerRow = worksheet.getRow(1);
+      headerRow.eachCell((cell, colNumber) => {
+        headers[colNumber - 1] = String(cell.value || `Column${colNumber}`);
+      });
+
+      // Parse rows to JSON
+      const rows: ExcelRow[] = [];
+      worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber === 1) return; // Skip header row
+        
+        const rowData: ExcelRow = {};
+        row.eachCell((cell, colNumber) => {
+          const header = headers[colNumber - 1];
+          if (header) {
+            // Handle different cell value types
+            let value = cell.value;
+            if (cell.value && typeof cell.value === 'object' && 'result' in cell.value) {
+              // Handle formula cells
+              value = cell.value.result;
+            }
+            rowData[header] = value as string | number | undefined;
+          }
+        });
+        
+        // Only add rows that have some data
+        if (Object.keys(rowData).length > 0) {
+          rows.push(rowData);
+        }
+      });
       
       console.log('Parsed', rows.length, 'rows from Excel');
 

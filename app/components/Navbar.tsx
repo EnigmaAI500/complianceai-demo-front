@@ -11,6 +11,7 @@ export default function Navbar() {
 
   const navItems = [
     { href: "/", label: t.nav.home },
+    { href: "/demo", label: t.nav.demo },
     { href: "/problem", label: t.nav.problem },
     { href: "/why", label: t.nav.why },
     { href: "/team", label: t.nav.team },
@@ -59,7 +60,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <LanguageSwitcher />
             <Link
-              href="/#demo"
+              href="/demo"
               className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 hover:scale-105"
             >
               {t.nav.tryDemo}
@@ -121,7 +122,7 @@ function MobileMenu({ navItems, tryDemo }: { navItems: { href: string; label: st
             );
           })}
           <Link
-            href="/#demo"
+            href="/demo"
             className="mt-2 flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-full"
           >
             {tryDemo}
