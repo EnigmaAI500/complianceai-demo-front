@@ -2,6 +2,7 @@
 export interface TranslationKeys {
   nav: {
     home: string;
+    demo: string;
     problem: string;
     why: string;
     team: string;
@@ -127,6 +128,7 @@ export const translations: Record<Language, TranslationKeys> = {
     // Navbar
     nav: {
       home: "Home",
+      demo: "Demo",
       problem: "Problem",
       why: "Why Us",
       team: "Team",
@@ -257,6 +259,7 @@ export const translations: Record<Language, TranslationKeys> = {
     // Navbar
     nav: {
       home: "Главная",
+      demo: "Демо",
       problem: "Проблема",
       why: "Почему мы",
       team: "Команда",
@@ -387,6 +390,7 @@ export const translations: Record<Language, TranslationKeys> = {
     // Navbar
     nav: {
       home: "Bosh sahifa",
+      demo: "Demo",
       problem: "Muammo",
       why: "Nega biz",
       team: "Jamoa",
