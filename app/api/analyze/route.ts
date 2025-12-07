@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import ExcelJS from 'exceljs';
+import { Readable } from 'stream';
 
 // External API endpoint
 const EXTERNAL_API = 'http://52.172.102.172:8000/risk/batch-excel';
@@ -76,11 +77,15 @@ export async function POST(request: NextRequest) {
       console.log('Parsing Excel response with ExcelJS...');
       
       const arrayBuffer = await response.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
       
-      // Create workbook and load from buffer
+      // Create a readable stream from the ArrayBuffer
+      const stream = new Readable();
+      stream.push(Buffer.from(new Uint8Array(arrayBuffer)));
+      stream.push(null);
+      
+      // Create workbook and load from stream
       const workbook = new ExcelJS.Workbook();
-      await workbook.xlsx.load(buffer);
+      await workbook.xlsx.read(stream);
       
       // Get first worksheet
       const worksheet = workbook.worksheets[0];
