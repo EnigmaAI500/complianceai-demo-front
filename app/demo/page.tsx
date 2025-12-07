@@ -784,7 +784,7 @@ export default function DemoDashboard() {
           <div className="p-4 border-t border-gray-100">
             <p className="text-xs text-gray-500 mb-3 font-semibold uppercase tracking-wider">Demo Video</p>
             <a
-              href="https://www.youtube.com/watch?v=hT_nvWreIhg&list=RDApZUr81BrIo&index=11"
+              href="https://www.youtube.com/watch?v=Uv7GNXlYCMw"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-3 bg-red-50 hover:bg-red-100 rounded-xl transition-colors group border border-red-100"
