@@ -3,7 +3,7 @@ import ExcelJS from 'exceljs';
 import { Readable } from 'stream';
 
 // External API endpoint
-const EXTERNAL_API = 'http://52.172.102.172:8000/risk/batch-excel';
+const EXTERNAL_API = 'http://52.172.102.172:8000/risk/bulk-excel';
 
 interface ExcelRow {
   CustomerNo?: string;
@@ -243,12 +243,20 @@ function generateReasonCodes(reasons: string[], row: ExcelRow): string[] {
   return [...new Set(codes)].length > 0 ? [...new Set(codes)] : ['NO_FLAGS'];
 }
 
+export async function GET() {
+  return NextResponse.json({ 
+    status: 'ok', 
+    message: 'Compliance Analysis API is running. Use POST to analyze files.',
+    endpoint: '/api/analyze?use_llm=true'
+  });
+}
+
 export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },
   });

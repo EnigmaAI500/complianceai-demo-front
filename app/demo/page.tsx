@@ -29,7 +29,10 @@ interface CustomerData {
   document?: {
     type: string;
     number: string;
+    serial?: string;
     issuer?: { code: string; place: string };
+    issuerCode?: string;
+    issuerPlace?: string;
     expiryDate?: string;
   };
   residency?: {
@@ -38,10 +41,12 @@ interface CustomerData {
     region?: string;
     locality?: string;
     street?: string;
+    addressCode?: string;
   };
   business_profile?: {
-    mainAccountCategory: string;
-    categoryRisk: string;
+    mainAccount?: string;
+    mainAccountCategory?: string | null;
+    categoryRisk?: string | null;
   };
   risk: {
     score: number;
@@ -67,6 +72,8 @@ interface ApiResponse {
   file: {
     filename: string;
     rows_processed: number;
+    missing_optional_fields?: string[];
+    upload_country?: string;
     validation: {
       status: string;
       errors: string[];
@@ -95,394 +102,9 @@ interface ApiResponse {
     version: string;
     data_sources: string[];
     scoring_model: string;
+    definitions_version?: string;
   };
 }
-
-// Hardcoded response data for demo
-const sampleResponse: ApiResponse = {
-  report_id: "rpt_2025_12_07_001",
-  generated_at: "2025-12-07T15:45:00Z",
-  file: {
-    filename: "customer_list.xlsx",
-    rows_processed: 10,
-    validation: {
-      status: "OK",
-      errors: [],
-      warnings: [
-        "Some customers have no RiskFlag values",
-        "Some business categories appear high-risk by FATF definitions"
-      ]
-    }
-  },
-  summary: {
-    total_customers: 10,
-    risk_distribution: {
-      LOW: 7,
-      MEDIUM: 0,
-      HIGH: 2,
-      CRITICAL: 1
-    },
-    avg_score: 33,
-    top_risk_drivers: [
-      "FATF high-risk jurisdictions",
-      "VPN or foreign IP mismatch",
-      "High-risk occupations (front company, cash-intensive business)"
-    ],
-    flags_count: {
-      FATF_HIGH_RISK: 3,
-      COUNTRY_MISMATCH: 4,
-      DEVICE_REUSE: 2,
-      PEP_MATCH: 1,
-      EMAIL_HIGH_RISK: 1
-    }
-  },
-  customers: [
-    // CRITICAL (86-100)
-    {
-      customerNo: "CUST-HR-090",
-      fullName: "KIM CHOL (a.k.a. CHOL KIM)",
-      citizenship: "PRK",
-      birthCountry: "Democratic People's Republic of Korea",
-      document: {
-        type: "PASSPORT",
-        number: "KPP7654321",
-        issuer: {
-          code: "KP-PYO-01",
-          place: "Pyongyang"
-        },
-        expiryDate: "2031-05-20"
-      },
-      business_profile: {
-        mainAccountCategory: "front_company_trader",
-        categoryRisk: "CRITICAL"
-      },
-      risk: {
-        score: 100,
-        riskLevel: "CRITICAL",
-        confidence: 0.92,
-        riskDrivers: [
-          "Customer from FATF blacklist jurisdiction",
-          "Front company / shell company indicators",
-          "Maximum sanctions exposure"
-        ],
-        breakdown: {
-          sanctions: 60,
-          pep: 15,
-          digitalFootprint: 10,
-          device: 10,
-          profile: 5
-        }
-      },
-      tags: [
-        { code: "FATF_HIGH_RISK", label: "FATF Blacklist", severity: "CRITICAL" },
-        { code: "EMAIL_HIGH_RISK", severity: "HIGH" },
-        { code: "DEVICE_REUSE", severity: "MEDIUM" }
-      ],
-      recommendedActions: [
-        {
-          action: "Immediate Escalation",
-          urgency: "CRITICAL",
-          reason: "Maximum risk score - potential sanctions violation"
-        }
-      ]
-    },
-    // HIGH (61-85)
-    {
-      customerNo: "CUST-HR-100",
-      fullName: "ALI REZA (a.k.a. REZA ALI)",
-      citizenship: "IRN",
-      nationality: "Iranian",
-      birthCountry: "Iran",
-      document: {
-        type: "PASSPORT",
-        number: "IRP1234567",
-        issuer: {
-          code: "IR-TEH-01",
-          place: "Tehran"
-        },
-        expiryDate: "2030-12-31"
-      },
-      residency: {
-        residentStatus: "NON_RESIDENT",
-        district: "Shaykhontohur",
-        region: "Tashkent City",
-        locality: "Tashkent",
-        street: "Navoi 10"
-      },
-      business_profile: {
-        mainAccountCategory: "international_money_service_business",
-        categoryRisk: "HIGH"
-      },
-      risk: {
-        score: 80,
-        riskLevel: "HIGH",
-        confidence: 0.86,
-        riskDrivers: [
-          "Customer from FATF high-risk jurisdiction",
-          "High-risk business category",
-          "Country-based sanctions risk"
-        ],
-        breakdown: {
-          sanctions: 50,
-          pep: 0,
-          digitalFootprint: 15,
-          device: 10,
-          profile: 5
-        }
-      },
-      tags: [
-        {
-          code: "FATF_HIGH_RISK",
-          label: "FATF High-Risk Jurisdiction",
-          severity: "HIGH",
-          source: "country_risk_list"
-        },
-        {
-          code: "COUNTRY_HIGH_RISK",
-          label: "High-Risk Jurisdiction Mismatch",
-          severity: "MEDIUM",
-          source: "geo_validation"
-        }
-      ],
-      recommendedActions: [
-        {
-          action: "Enhanced Due Diligence",
-          urgency: "HIGH",
-          reason: "Multiple high-risk indicators including jurisdiction and business activity"
-        }
-      ]
-    },
-    {
-      customerNo: "CUST-HR-088",
-      fullName: "VIKTOR PETROV",
-      citizenship: "RUS",
-      nationality: "Russian",
-      birthCountry: "Russia",
-      document: {
-        type: "PASSPORT",
-        number: "RU77889900",
-        issuer: { code: "RU-MOW-01", place: "Moscow" },
-        expiryDate: "2030-04-18"
-      },
-      residency: {
-        residentStatus: "NON_RESIDENT",
-        district: "Mirzo Ulugbek",
-        region: "Tashkent City",
-        locality: "Tashkent",
-        street: "Amir Temur 45"
-      },
-      business_profile: {
-        mainAccountCategory: "import_export_trading",
-        categoryRisk: "HIGH"
-      },
-      risk: {
-        score: 72,
-        riskLevel: "HIGH",
-        confidence: 0.84,
-        riskDrivers: [
-          "Customer from FATF grey-list jurisdiction",
-          "High-risk business category",
-          "VPN detected during onboarding"
-        ],
-        breakdown: {
-          sanctions: 35,
-          pep: 10,
-          digitalFootprint: 12,
-          device: 10,
-          profile: 5
-        }
-      },
-      tags: [
-        { code: "FATF_HIGH_RISK", label: "FATF Grey-List Country", severity: "HIGH" },
-        { code: "COUNTRY_MISMATCH", severity: "MEDIUM" },
-        { code: "DEVICE_REUSE", severity: "MEDIUM" },
-        { code: "PEP_MATCH", label: "Potential PEP Connection", severity: "HIGH" }
-      ],
-      recommendedActions: [
-        {
-          action: "Enhanced Due Diligence",
-          urgency: "HIGH",
-          reason: "Multiple risk indicators including jurisdiction and potential PEP connection"
-        }
-      ]
-    },
-    // LOW (0-30)
-    {
-      customerNo: "CUST-LR-005",
-      fullName: "HANS MUELLER",
-      citizenship: "DEU",
-      nationality: "German",
-      birthCountry: "Germany",
-      document: {
-        type: "NATIONAL_ID",
-        number: "DE55667788",
-        issuer: { code: "DE-BER-01", place: "Berlin" },
-        expiryDate: "2028-07-25"
-      },
-      business_profile: {
-        mainAccountCategory: "business_account",
-        categoryRisk: "LOW"
-      },
-      risk: {
-        score: 18,
-        riskLevel: "LOW",
-        confidence: 0.93
-      },
-      tags: [{ code: "VERIFIED", label: "Identity Verified", severity: "LOW" }]
-    },
-    {
-      customerNo: "CUST-LR-003",
-      fullName: "TANAKA YUKI",
-      citizenship: "JPN",
-      nationality: "Japanese",
-      birthCountry: "Japan",
-      document: {
-        type: "PASSPORT",
-        number: "JP98765432",
-        issuer: { code: "JP-TKY-01", place: "Tokyo" },
-        expiryDate: "2030-09-10"
-      },
-      business_profile: {
-        mainAccountCategory: "corporate_account",
-        categoryRisk: "LOW"
-      },
-      risk: {
-        score: 15,
-        riskLevel: "LOW",
-        confidence: 0.94
-      },
-      tags: [{ code: "VERIFIED", severity: "LOW" }]
-    },
-    {
-      customerNo: "CUST-LR-007",
-      fullName: "PIERRE DUBOIS",
-      citizenship: "FRA",
-      nationality: "French",
-      birthCountry: "France",
-      document: {
-        type: "NATIONAL_ID",
-        number: "FR44332211",
-        issuer: { code: "FR-PAR-01", place: "Paris" },
-        expiryDate: "2029-11-30"
-      },
-      business_profile: {
-        mainAccountCategory: "retail_banking",
-        categoryRisk: "LOW"
-      },
-      risk: {
-        score: 14,
-        riskLevel: "LOW",
-        confidence: 0.94
-      },
-      tags: [
-        { code: "VERIFIED", severity: "LOW" },
-        { code: "COUNTRY_MISMATCH", label: "Minor Address Discrepancy", severity: "LOW" }
-      ]
-    },
-    {
-      customerNo: "CUST-LR-001",
-      fullName: "JOHN SMITH",
-      citizenship: "USA",
-      nationality: "American",
-      birthCountry: "United States",
-      document: {
-        type: "PASSPORT",
-        number: "US12345678",
-        issuer: { code: "US-NYC-01", place: "New York" },
-        expiryDate: "2032-06-15"
-      },
-      business_profile: {
-        mainAccountCategory: "retail_banking",
-        categoryRisk: "LOW"
-      },
-      risk: {
-        score: 12,
-        riskLevel: "LOW",
-        confidence: 0.95
-      },
-      tags: [{ code: "VERIFIED", label: "Identity Verified", severity: "LOW" }]
-    },
-    {
-      customerNo: "CUST-LR-004",
-      fullName: "EMMA WILSON",
-      citizenship: "GBR",
-      nationality: "British",
-      birthCountry: "United Kingdom",
-      document: {
-        type: "PASSPORT",
-        number: "GB11223344",
-        issuer: { code: "UK-LON-01", place: "London" },
-        expiryDate: "2031-12-01"
-      },
-      business_profile: {
-        mainAccountCategory: "investment_account",
-        categoryRisk: "LOW"
-      },
-      risk: {
-        score: 10,
-        riskLevel: "LOW",
-        confidence: 0.96
-      },
-      tags: [{ code: "VERIFIED", severity: "LOW" }]
-    },
-    {
-      customerNo: "CUST-LR-002",
-      fullName: "MARIA GARCIA",
-      citizenship: "ESP",
-      nationality: "Spanish",
-      birthCountry: "Spain",
-      document: {
-        type: "NATIONAL_ID",
-        number: "ESP87654321",
-        issuer: { code: "ES-MAD-01", place: "Madrid" },
-        expiryDate: "2029-03-20"
-      },
-      business_profile: {
-        mainAccountCategory: "personal_savings",
-        categoryRisk: "LOW"
-      },
-      risk: {
-        score: 8,
-        riskLevel: "LOW",
-        confidence: 0.97
-      },
-      tags: [{ code: "VERIFIED", label: "Identity Verified", severity: "LOW" }]
-    },
-    {
-      customerNo: "CUST-LR-006",
-      fullName: "SOFIA ANDERSSON",
-      citizenship: "SWE",
-      nationality: "Swedish",
-      birthCountry: "Sweden",
-      document: {
-        type: "PASSPORT",
-        number: "SE99887766",
-        issuer: { code: "SE-STO-01", place: "Stockholm" },
-        expiryDate: "2033-02-14"
-      },
-      business_profile: {
-        mainAccountCategory: "personal_checking",
-        categoryRisk: "LOW"
-      },
-      risk: {
-        score: 5,
-        riskLevel: "LOW",
-        confidence: 0.98
-      },
-      tags: [{ code: "VERIFIED", severity: "LOW" }]
-    }
-  ],
-  exports: {
-    pdf: "/exports/rpt_2025_12_07_001/report.pdf",
-    excel: "/exports/rpt_2025_12_07_001/details.xlsx",
-    json: "/exports/rpt_2025_12_07_001/raw.json"
-  },
-  engine_info: {
-    version: "compliance-engine-v1.5.0",
-    data_sources: ["OFAC", "UN", "EU", "PEP-DB-v3", "GeoRisk-2025"],
-    scoring_model: "weighted-rules+ml"
-  }
-};
 
 // Risk Level Ranges: LOW (0-30), MEDIUM (31-60), HIGH (61-85), CRITICAL (86-100)
 function getRiskLevelFromScore(score: number): string {
@@ -520,6 +142,17 @@ interface ChatMessage {
   timestamp: Date;
 }
 
+// Loading steps for the analysis process
+const LOADING_STEPS = [
+  { id: 1, label: "Uploading file", duration: 2000 },
+  { id: 2, label: "Parsing customer data", duration: 3000 },
+  { id: 3, label: "Running sanctions screening", duration: 4000 },
+  { id: 4, label: "Checking PEP databases", duration: 3000 },
+  { id: 5, label: "Analyzing risk factors", duration: 4000 },
+  { id: 6, label: "Generating AI insights", duration: 3000 },
+  { id: 7, label: "Preparing report", duration: 2000 },
+];
+
 export default function DemoDashboard() {
   const [activeTab, setActiveTab] = useState<"upload" | "results" | "history">("upload");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -530,6 +163,11 @@ export default function DemoDashboard() {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [analysisHistory, setAnalysisHistory] = useState<{ id: string; date: string; customers: number; }[]>([]);
+  
+  // Loading state
+  const [loadingStep, setLoadingStep] = useState(0);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const loadingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   
   // Chat state
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -549,6 +187,45 @@ export default function DemoDashboard() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
+
+  // Loading progress simulation
+  useEffect(() => {
+    if (isAnalyzing) {
+      setLoadingStep(0);
+      setLoadingProgress(0);
+      
+      let currentStep = 0;
+      let progress = 0;
+      
+      loadingIntervalRef.current = setInterval(() => {
+        progress += 1;
+        setLoadingProgress(Math.min(progress, 95)); // Cap at 95% until complete
+        
+        // Advance step based on progress
+        const stepThreshold = Math.floor((progress / 100) * LOADING_STEPS.length);
+        if (stepThreshold > currentStep && stepThreshold < LOADING_STEPS.length) {
+          currentStep = stepThreshold;
+          setLoadingStep(currentStep);
+        }
+      }, 200); // Update every 200ms for ~20 seconds total
+      
+      return () => {
+        if (loadingIntervalRef.current) {
+          clearInterval(loadingIntervalRef.current);
+        }
+      };
+    } else {
+      // When analysis completes, jump to 100%
+      if (loadingProgress > 0) {
+        setLoadingProgress(100);
+        setLoadingStep(LOADING_STEPS.length);
+        setTimeout(() => {
+          setLoadingProgress(0);
+          setLoadingStep(0);
+        }, 500);
+      }
+    }
+  }, [isAnalyzing]);
 
   // AI Chat response generator
   const generateAIResponse = (userMessage: string): string => {
@@ -674,21 +351,42 @@ export default function DemoDashboard() {
   const removeFile = (index: number) => setUploadedFiles(prev => prev.filter((_, i) => i !== index));
 
   const analyzeFiles = async () => {
+    if (uploadedFiles.length === 0) {
+      setError('Please upload a file first');
+      return;
+    }
+
     setIsAnalyzing(true);
     setError(null);
 
     try {
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Update filename in response if file was uploaded
-      const responseData = { ...sampleResponse };
-      if (uploadedFiles.length > 0) {
-        responseData.file = {
-          ...responseData.file,
-          filename: uploadedFiles[0].name
-        };
+      // Create FormData with the uploaded file
+      const formData = new FormData();
+      formData.append('file', uploadedFiles[0]);
+
+      // Call the API endpoint
+      const response = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `API error: ${response.status}`);
       }
+
+      const responseData: ApiResponse = await response.json();
+      
+      // Sort customers by risk level (CRITICAL first, then HIGH, MEDIUM, LOW)
+      const riskOrder: Record<string, number> = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
+      responseData.customers.sort((a, b) => {
+        const aLevel = getRiskLevelFromScore(a.risk.score);
+        const bLevel = getRiskLevelFromScore(b.risk.score);
+        if (riskOrder[aLevel] !== riskOrder[bLevel]) {
+          return riskOrder[aLevel] - riskOrder[bLevel];
+        }
+        return b.risk.score - a.risk.score; // Higher score first within same level
+      });
       
       setReportData(responseData);
       setAnalysisHistory(prev => [...prev, {
@@ -955,30 +653,115 @@ export default function DemoDashboard() {
                   </div>
                 )}
 
-                <button
-                  onClick={analyzeFiles}
-                  disabled={isAnalyzing}
-                  className={`w-full mt-6 py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
-                    isAnalyzing ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-lg hover:shadow-cyan-500/30"
-                  }`}
-                >
-                  {isAnalyzing ? (
-                    <>
-                      <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                      {uploadedFiles.length > 0 ? `Analyze ${uploadedFiles.length} File${uploadedFiles.length > 1 ? 's' : ''}` : "Run Demo Analysis"}
-                    </>
-                  )}
-                </button>
+                {!isAnalyzing ? (
+                  <button
+                    onClick={analyzeFiles}
+                    className="w-full mt-6 py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:shadow-lg hover:shadow-cyan-500/30"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    {uploadedFiles.length > 0 ? `Analyze ${uploadedFiles.length} File${uploadedFiles.length > 1 ? 's' : ''}` : "Run Demo Analysis"}
+                  </button>
+                ) : (
+                  /* Enhanced Loading State */
+                  <div className="mt-6 bg-gradient-to-br from-slate-50 to-cyan-50 border border-cyan-100 rounded-2xl p-6 space-y-5">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                            <svg className="w-6 h-6 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white animate-ping"></div>
+                        </div>
+                        <div>
+                          <h3 className="text-gray-900 font-semibold">AI Compliance Analysis</h3>
+                          <p className="text-sm text-gray-500">Processing your data...</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-cyan-600">{loadingProgress}%</div>
+                        <div className="text-xs text-gray-400">~{Math.max(1, Math.ceil((100 - loadingProgress) / 5))}s remaining</div>
+                      </div>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
+                      <div 
+                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 rounded-full transition-all duration-300 ease-out"
+                        style={{ width: `${loadingProgress}%` }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                      </div>
+                    </div>
+
+                    {/* Steps */}
+                    <div className="grid grid-cols-1 gap-2">
+                      {LOADING_STEPS.map((step, index) => {
+                        const isCompleted = index < loadingStep;
+                        const isCurrent = index === loadingStep;
+                        return (
+                          <div 
+                            key={step.id} 
+                            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${
+                              isCurrent ? 'bg-cyan-100 border border-cyan-200' : isCompleted ? 'bg-emerald-50' : 'bg-gray-50'
+                            }`}
+                          >
+                            <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+                              isCompleted ? 'bg-emerald-500' : isCurrent ? 'bg-cyan-500' : 'bg-gray-300'
+                            }`}>
+                              {isCompleted ? (
+                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                </svg>
+                              ) : isCurrent ? (
+                                <svg className="w-4 h-4 text-white animate-spin" fill="none" viewBox="0 0 24 24">
+                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                </svg>
+                              ) : (
+                                <span className="text-xs text-white font-medium">{index + 1}</span>
+                              )}
+                            </div>
+                            <span className={`text-sm ${
+                              isCurrent ? 'text-cyan-700 font-medium' : isCompleted ? 'text-emerald-700' : 'text-gray-400'
+                            }`}>
+                              {step.label}
+                              {isCurrent && <span className="ml-2 animate-pulse">...</span>}
+                            </span>
+                            {isCompleted && (
+                              <span className="ml-auto text-xs text-emerald-600 font-medium">Done</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Fun Facts */}
+                    <div className="bg-white/60 rounded-xl p-4 border border-gray-100">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+                          <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 mb-1">Did you know?</p>
+                          <p className="text-sm text-gray-700">
+                            {loadingStep <= 2 && "Our AI analyzes over 50+ risk indicators per customer including sanctions lists, PEP databases, and adverse media."}
+                            {loadingStep === 3 && "We check against OFAC, UN, EU, and 200+ other sanctions lists in real-time."}
+                            {loadingStep === 4 && "Our PEP database covers 1.5M+ politically exposed persons across 200 countries."}
+                            {loadingStep === 5 && "Risk scoring uses a weighted algorithm combining ML predictions with rule-based analysis."}
+                            {loadingStep >= 6 && "AI-powered insights help identify complex risk patterns that traditional systems might miss."}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -1216,13 +999,17 @@ export default function DemoDashboard() {
               </div>
 
               {/* Business Profile */}
-              {selectedCustomer.business_profile && (
+              {selectedCustomer.business_profile && (selectedCustomer.business_profile.mainAccount || selectedCustomer.business_profile.mainAccountCategory) && (
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
                   <p className="text-amber-700 text-xs mb-1">Business Category</p>
-                  <p className="text-amber-800 text-sm font-medium">{selectedCustomer.business_profile.mainAccountCategory.replace(/_/g, ' ')}</p>
-                  <span className={`inline-block mt-1 px-2 py-0.5 text-xs rounded ${getSeverityColor(selectedCustomer.business_profile.categoryRisk)}`}>
-                    {selectedCustomer.business_profile.categoryRisk} RISK
-                  </span>
+                  <p className="text-amber-800 text-sm font-medium capitalize">
+                    {(selectedCustomer.business_profile.mainAccount || selectedCustomer.business_profile.mainAccountCategory || 'N/A').replace(/_/g, ' ')}
+                  </p>
+                  {selectedCustomer.business_profile.categoryRisk && (
+                    <span className={`inline-block mt-1 px-2 py-0.5 text-xs rounded ${getSeverityColor(selectedCustomer.business_profile.categoryRisk)}`}>
+                      {selectedCustomer.business_profile.categoryRisk} RISK
+                    </span>
+                  )}
                 </div>
               )}
 
